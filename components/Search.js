@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, FlatList, TextInput, StyleSheet, View, ActivityIndicator } from 'react-native';
-import FilmItem from './FilmItem'
+import FilmList from './FilmList'
 import { getFilmsFromApiWithSearchedText } from '../API/TMDBApi'
 import { connect } from 'react-redux'
 
@@ -28,7 +28,6 @@ class Search extends React.Component {
         if (this.searchedText.length > 0) {
             this.setState({ isLoading: true })
             getFilmsFromApiWithSearchedText(this.searchedText, this.page + 1).then(data => {
-                console.log(data)
                 this.page = data.page
                 this.totalPages = data.total_pages
                 this.setState({
@@ -36,7 +35,6 @@ class Search extends React.Component {
                   isLoading: false
                 })
             })
-            this.setState({ isLoading: false })
         }
     }
 
@@ -52,7 +50,6 @@ class Search extends React.Component {
     }
 
     _displayDetailForFilm = (idFilm) => {
-        console.log("Display film with id " + idFilm)
         this.props.navigation.navigate("FilmDetail", { idFilm: idFilm })
     }
 
@@ -61,17 +58,12 @@ class Search extends React.Component {
             <View style={styles.main_container}>
                 <TextInput onSubmitEditing={() => this._searchFilms()} style={styles.textinput} placeholder='Titre du film' onChangeText={(text => this.searchedText = text)}></TextInput>
                 <Button style={{height: 50}} title='Recherche' onPress={() => this._searchFilms()}></Button>
-                <FlatList 
-                    onEndReachedThreshold={0.5}
-                    onEndReached={() => {
-                        if (this.page < this.totalPages) {
-                            this._loadFilms()
-                        }
-                    }}
-                    data={this.state.films}
-                    extraData={this.props.favoritesFilm}
-                    keyExtractor={item => item.id.toString()}
-                    renderItem={({ item }) => (<FilmItem film={item} isFilmFavorite={this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1} displayDetailForFilm={this._displayDetailForFilm} />)}
+                <FilmList
+                    films={this.state.films} // C'est bien le component Search qui récupère les films depuis l'API et on les transmet ici pour que le component FilmList les affiche
+                    navigation={this.props.navigation} // Ici on transmet les informations de navigation pour permettre au component FilmList de naviguer vers le détail d'un film
+                    loadFilms={this._loadFilms} // _loadFilm charge les films suivants, ça concerne l'API, le component FilmList va juste appeler cette méthode quand l'utilisateur aura parcouru tous les films et c'est le component Search qui lui fournira les films suivants
+                    page={this.page}
+                    totalPages={this.totalPages} // les infos page et totalPages vont être utile, côté component FilmList, pour ne pas déclencher l'évènement pour charger plus de film si on a atteint la dernière page
                 />
                 {this._displayLoading()}
             </View>
