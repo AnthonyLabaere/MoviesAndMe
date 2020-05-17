@@ -21,38 +21,47 @@ function SearchScreen() {
   )
 }
 
+function FavoritesScreen() {
+  return (
+    <Stack.Navigator>
+        <Stack.Screen name="Favorites" component={Favorites} />
+        <Stack.Screen name="FilmDetail" component={FilmDetail} />
+    </Stack.Navigator>
+  )
+}
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
     <Provider store={Store}>
       <NavigationContainer>
-      <Tab.Navigator 
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+        <Tab.Navigator 
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
 
-            if (route.name === 'SearchScreen') {
-              // SearchScreen
-              return <Image
-                source={require('./images/ic_search.png')}
-                style={styles.icon}/>
-            } 
-              // Favorites
-              return <Image
-                source={require('./images/ic_favorite.png')}
-                style={styles.icon}/>
-          },
-        })}
-        tabBarOptions={{
-          activeBackgroundColor: '#DDDDDD', // Couleur d'arrière-plan de l'onglet sélectionné
-          inactiveBackgroundColor: '#FFFFFF', // Couleur d'arrière-plan des onglets non sélectionnés
-          showLabel: false, // On masque les titres
-          showIcon: true // On informe le TabNavigator qu'on souhaite afficher les icônes définis
-        }}>
-        <Tab.Screen name="SearchScreen" component={SearchScreen} />
-        <Tab.Screen name="Favorites" component={Favorites} />
-      </Tab.Navigator>
+              if (route.name === 'SearchScreen') {
+                // SearchScreen
+                return <Image
+                  source={require('./images/ic_search.png')}
+                  style={styles.icon}/>
+              } 
+                // Favorites
+                return <Image
+                  source={require('./images/ic_favorite.png')}
+                  style={styles.icon}/>
+            },
+          })}
+          tabBarOptions={{
+            activeBackgroundColor: '#DDDDDD', // Couleur d'arrière-plan de l'onglet sélectionné
+            inactiveBackgroundColor: '#FFFFFF', // Couleur d'arrière-plan des onglets non sélectionnés
+            showLabel: false, // On masque les titres
+            showIcon: true // On informe le TabNavigator qu'on souhaite afficher les icônes définis
+          }}>
+          <Tab.Screen name="SearchScreen" component={SearchScreen} />
+          <Tab.Screen name="Favorites" component={FavoritesScreen} />
+        </Tab.Navigator>
       </NavigationContainer>
     </Provider>
   )
