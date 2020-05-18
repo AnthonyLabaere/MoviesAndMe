@@ -16,8 +16,14 @@ const Stack = createStackNavigator();
 function SearchScreen() {
   return (
     <Stack.Navigator>
-        <Stack.Screen name="Search" component={Search} />
-        <Stack.Screen name="FilmDetail" component={FilmDetail} />
+        <Stack.Screen name="Search" component={Search}
+          options={{
+            headerTitle: 'Recherche'
+          }} />
+        <Stack.Screen name="FilmDetail" component={FilmDetail}
+          options={{
+            headerTitle: 'Détail du film'
+          }} />
     </Stack.Navigator>
   )
 }
@@ -25,8 +31,14 @@ function SearchScreen() {
 function FavoritesScreen() {
   return (
     <Stack.Navigator>
-        <Stack.Screen name="Favorites" component={Favorites} />
-        <Stack.Screen name="FilmDetail" component={FilmDetail} />
+        <Stack.Screen name="Favorites" component={Favorites} 
+          options={{
+            headerTitle: 'Favoris'
+          }} />
+        <Stack.Screen name="FilmDetail" component={FilmDetail}
+          options={{
+            headerTitle: 'Détail du film'
+          }} />
     </Stack.Navigator>
   )
 }
@@ -68,7 +80,7 @@ export default function App() {
             showLabel: false, // On masque les titres
             showIcon: true // On informe le TabNavigator qu'on souhaite afficher les icônes définis
           }}>
-          <Tab.Screen name="Test" component={TestScreen} />
+          {/* <Tab.Screen name="Test" component={TestScreen} /> */}
           <Tab.Screen name="SearchScreen" component={SearchScreen} />
           <Tab.Screen name="FavoritesScreen" component={FavoritesScreen} />
         </Tab.Navigator>

@@ -4,6 +4,7 @@ import { getFilmDetailFromApi, getImageFromApi } from '../API/TMDBApi'
 import moment from 'moment'
 import numeral from 'numeral'
 import { connect } from 'react-redux'
+import EnlargeShrink from '../animations/EnlargeShrink'
 
 class FilmDetail extends React.Component {
 
@@ -22,15 +23,18 @@ class FilmDetail extends React.Component {
 
   _displayFavoriteImage() {
       var sourceImage = require('../images/ic_favorite_border.png')
-      if (this.props.favoritesFilm.findIndex(item => item.id === this.state.film.id) !== -1) {
+      let shouldEnlarge = this.props.favoritesFilm.findIndex(item => item.id === this.state.film.id) !== -1
+      if (shouldEnlarge) {
         // Film dans nos favoris
         sourceImage = require('../images/ic_favorite.png')
       }
       return (
-        <Image
-          style={styles.favorite_image}
-          source={sourceImage}
-        />
+        <EnlargeShrink shouldEnlarge={shouldEnlarge}>
+          <Image
+            style={styles.favorite_image}
+            source={sourceImage}
+          />
+        </EnlargeShrink>
       )
   }
 
@@ -57,7 +61,8 @@ class FilmDetail extends React.Component {
     const favoriteFilmIndex = this.props.favoritesFilm.findIndex(item => item.id === this.props.route.params.idFilm)
     if (favoriteFilmIndex !== -1) { 
       this.setState({
-        film: this.props.favoritesFilm[favoriteFilmIndex]
+        film: this.props.favoritesFilm[favoriteFilmIndex],
+        isLoading: false
       }, () => { this._updateNavigationParams() })
       return
     }
@@ -128,7 +133,7 @@ class FilmDetail extends React.Component {
           <TouchableOpacity
             style={styles.share_touchable_floatingactionbutton}
             onPress={() => this._shareFilm()}>
-            <Image
+              <Image
               style={styles.share_image}
               source={require('../images/ic_share.png')} />
           </TouchableOpacity>
@@ -194,8 +199,9 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Alignement des components enfants sur l'axe secondaire, X ici
   },
   favorite_image: {
-    width: 40,
-    height: 40
+    flex: 1,
+    width: null,
+    height: null
   },
   share_touchable_floatingactionbutton: {
     position: 'absolute',
