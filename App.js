@@ -3,6 +3,7 @@ import React from 'react';
 import FilmDetail from './components/FilmDetail'
 import Search from './components/Search'
 import Favorites from './components/Favorites'
+import Test from './components/Test'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -30,6 +31,12 @@ function FavoritesScreen() {
   )
 }
 
+function TestScreen() {
+  return (
+    <Test />
+  )
+}
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -39,14 +46,18 @@ export default function App() {
         <Tab.Navigator 
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
-
               if (route.name === 'SearchScreen') {
                 // SearchScreen
                 return <Image
                   source={require('./images/ic_search.png')}
                   style={styles.icon}/>
-              } 
+              }  else if (route.name === 'FavoritesScreen') {
+                // Favorites
+                return <Image
+                  source={require('./images/ic_favorite.png')}
+                  style={styles.icon}/>
+              }
+
                 // Favorites
                 return <Image
                   source={require('./images/ic_favorite.png')}
@@ -61,6 +72,7 @@ export default function App() {
           }}>
           <Tab.Screen name="SearchScreen" component={SearchScreen} />
           <Tab.Screen name="Favorites" component={FavoritesScreen} />
+          <Tab.Screen name="Test" component={TestScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>
