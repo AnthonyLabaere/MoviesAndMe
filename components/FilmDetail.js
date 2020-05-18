@@ -1,11 +1,12 @@
 import React from 'react'
-import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, Share, Platform } from 'react-native'
+import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, Share, Platform, Button } from 'react-native'
 import { getFilmDetailFromApi, getImageFromApi } from '../API/TMDBApi'
 import moment from 'moment'
 import numeral from 'numeral'
 import { connect } from 'react-redux'
 
 class FilmDetail extends React.Component {
+
   constructor(props) {
     super(props)
     this.state = {
@@ -33,11 +34,41 @@ class FilmDetail extends React.Component {
       )
   }
 
+  _updateNavigationParams() {
+    const shareFilm = this._shareFilm
+
+    if (Platform.OS === 'ios') {
+      this.props.navigation.setOptions({
+        headerTitle: 'Détail du film',
+        headerRight: () => (
+          <TouchableOpacity
+            style={styles.share_touchable_headerrightbutton}
+            onPress={() => shareFilm()}>
+            <Image
+              style={styles.share_image}
+              source={require('../images/ic_share.png')} />
+          </TouchableOpacity>
+        )
+      })
+    }
+  }
+
   componentDidMount() {
+    const favoriteFilmIndex = this.props.favoritesFilm.findIndex(item => item.id === this.props.route.params.idFilm)
+    if (favoriteFilmIndex !== -1) { 
+      this.setState({
+        film: this.props.favoritesFilm[favoriteFilmIndex]
+      }, () => { this._updateNavigationParams() })
+      return
+    }
+    
+    this.setState({ isLoading: true })
     getFilmDetailFromApi(this.props.route.params.idFilm).then(data => {
       this.setState({
         film: data,
         isLoading: false
+      }, () => { 
+        this._updateNavigationParams() 
       })
     })
   }
@@ -85,7 +116,7 @@ class FilmDetail extends React.Component {
     }
   }
 
-  _shareFilm() {
+  _shareFilm = () => {
       const { film } = this.state
       Share.share({ title: film.title, message: film.overview })
   }
@@ -99,7 +130,7 @@ class FilmDetail extends React.Component {
             onPress={() => this._shareFilm()}>
             <Image
               style={styles.share_image}
-              source={require('../images/ic_share.android.png')} />
+              source={require('../images/ic_share.png')} />
           </TouchableOpacity>
         )
       }
@@ -180,6 +211,9 @@ const styles = StyleSheet.create({
   share_image: {
     width: 30,
     height: 30
+  },
+  share_touchable_headerrightbutton: {
+    marginRight: 8
   }
 })
 
