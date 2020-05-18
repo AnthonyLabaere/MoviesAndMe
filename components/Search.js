@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, FlatList, TextInput, StyleSheet, View, ActivityIndicator } from 'react-native';
+import { Button, SafeAreaView, TextInput, StyleSheet, View, ActivityIndicator  } from 'react-native';
 import FilmList from './FilmList'
 import { getFilmsFromApiWithSearchedText } from '../API/TMDBApi'
 import { connect } from 'react-redux'
@@ -52,10 +52,11 @@ class Search extends React.Component {
     _displayDetailForFilm = (idFilm) => {
         this.props.navigation.navigate("FilmDetail", { idFilm: idFilm })
     }
+    
 
     render() {
         return (
-            <View style={styles.main_container}>
+            <SafeAreaView style={styles.main_container}>
                 <TextInput onSubmitEditing={() => this._searchFilms()} style={styles.textinput} placeholder='Titre du film' onChangeText={(text => this.searchedText = text)}></TextInput>
                 <Button style={{height: 50}} title='Recherche' onPress={() => this._searchFilms()}></Button>
                 <FilmList
@@ -67,7 +68,7 @@ class Search extends React.Component {
                     favoriteList={false}
                 />
                 {this._displayLoading()}
-            </View>
+            </SafeAreaView>
         )
     }
 }

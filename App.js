@@ -58,10 +58,8 @@ export default function App() {
                   style={styles.icon}/>
               }
 
-                // Favorites
-                return <Image
-                  source={require('./images/ic_favorite.png')}
-                  style={styles.icon}/>
+                // Autre
+                return
             },
           })}
           tabBarOptions={{
@@ -70,9 +68,9 @@ export default function App() {
             showLabel: false, // On masque les titres
             showIcon: true // On informe le TabNavigator qu'on souhaite afficher les icônes définis
           }}>
-          <Tab.Screen name="SearchScreen" component={SearchScreen} />
-          <Tab.Screen name="Favorites" component={FavoritesScreen} />
           <Tab.Screen name="Test" component={TestScreen} />
+          <Tab.Screen name="SearchScreen" component={SearchScreen} />
+          <Tab.Screen name="FavoritesScreen" component={FavoritesScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>
