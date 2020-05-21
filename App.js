@@ -10,6 +10,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider } from 'react-redux'
 import Store from './store/configureStore'
 import { Image, StyleSheet } from 'react-native';
+import { persistStore } from 'redux-persist'
+import { PersistGate } from 'redux-persist/es/integration/react'
 
 const Stack = createStackNavigator();
 
@@ -51,42 +53,49 @@ function TestScreen() {
 
 const Tab = createBottomTabNavigator();
 
-export default function App() {
-  return (
-    <Provider store={Store}>
-      <NavigationContainer>
-        <Tab.Navigator 
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              if (route.name === 'SearchScreen') {
-                // SearchScreen
-                return <Image
-                  source={require('./images/ic_search.png')}
-                  style={styles.icon}/>
-              }  else if (route.name === 'FavoritesScreen') {
-                // Favorites
-                return <Image
-                  source={require('./images/ic_favorite.png')}
-                  style={styles.icon}/>
-              }
+function persistor () {
+  return persistStore(Store)
+}
 
-                // Autre
-                return
-            },
-          })}
-          tabBarOptions={{
-            activeBackgroundColor: '#DDDDDD', // Couleur d'arrière-plan de l'onglet sélectionné
-            inactiveBackgroundColor: '#FFFFFF', // Couleur d'arrière-plan des onglets non sélectionnés
-            showLabel: false, // On masque les titres
-            showIcon: true // On informe le TabNavigator qu'on souhaite afficher les icônes définis
-          }}>
-          {/* <Tab.Screen name="Test" component={TestScreen} /> */}
-          <Tab.Screen name="SearchScreen" component={SearchScreen} />
-          <Tab.Screen name="FavoritesScreen" component={FavoritesScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </Provider>
-  )
+
+export default function App() {
+    return (
+      <Provider store={Store}>
+        <PersistGate persistor={persistor()}>
+          <NavigationContainer>
+            <Tab.Navigator 
+              screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                  if (route.name === 'SearchScreen') {
+                    // SearchScreen
+                    return <Image
+                      source={require('./images/ic_search.png')}
+                      style={styles.icon}/>
+                  }  else if (route.name === 'FavoritesScreen') {
+                    // Favorites
+                    return <Image
+                      source={require('./images/ic_favorite.png')}
+                      style={styles.icon}/>
+                  }
+
+                    // Autre
+                    return
+                },
+              })}
+              tabBarOptions={{
+                activeBackgroundColor: '#DDDDDD', // Couleur d'arrière-plan de l'onglet sélectionné
+                inactiveBackgroundColor: '#FFFFFF', // Couleur d'arrière-plan des onglets non sélectionnés
+                showLabel: false, // On masque les titres
+                showIcon: true // On informe le TabNavigator qu'on souhaite afficher les icônes définis
+              }}>
+              {/* <Tab.Screen name="Test" component={TestScreen} /> */}
+              <Tab.Screen name="SearchScreen" component={SearchScreen} />
+              <Tab.Screen name="FavoritesScreen" component={FavoritesScreen} />
+            </Tab.Navigator>
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
+    )
 }
 
 const styles = StyleSheet.create({
